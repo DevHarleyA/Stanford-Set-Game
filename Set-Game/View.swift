@@ -15,7 +15,7 @@ struct SetGameView: View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
                 ForEach(game.dealersDeck) { card in
-                    CardView(card: card).aspectRatio(2/3, contentMode: .fit)
+                    CardView(game: game, card: card).aspectRatio(2/3, contentMode: .fit)
                     
                 }
             }
@@ -24,21 +24,35 @@ struct SetGameView: View {
 }
 
 struct CardView: View {
+    let game: SetViewModel
     let card: SetGameModel.Card
     var isSelected = false
     
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
-            
-                shape.fill().foregroundColor(.green)
-                shape.strokeBorder(lineWidth: 2)
-            Text("\(card.numOfShapes)")
+            shape.fill().foregroundColor(.white)
+            shape.strokeBorder(lineWidth: 2)
+            shape.border(.green)
+            // create the number of shapes for the card
+            VStack {
+                
+                VStack {
+                    ForEach(0..<card.content.number, id: \.self) { _ in
+                        game.shapes[card.content.shape]
+                            .foregroundColor(game.colors[card.content.color])
+                            .frame(width: 20, height: 20)
+                            .opacity(game.shadings[card.content.shading])
+                            .border(game.colors[card.content.color])
+                    }
+                }
+                
+                Text("\(card.content.shading)")
+            }
+            .foregroundColor(.blue)
         }
     }
 }
-
-
 
 
 struct SetGameView_Previews: PreviewProvider {

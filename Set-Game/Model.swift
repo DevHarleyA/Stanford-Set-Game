@@ -19,18 +19,50 @@ struct SetGameModel {
     mutating func createDealingDeck() {
         var count = 0
         var id = 0
+        
         var numOfShapes = 1
+        var colorCount = 0
+        var shapeCount = 0
+        var shadingCount = 0
         
         while (count <= 81) {
-            let card = Card(id: id, numOfShapes: numOfShapes)
+            let card = Card(id: id, color: colorCount, number: numOfShapes, shape: shapeCount, shading: shadingCount)
             dealingDeck.append(card)
 
             count += 1
-            numOfShapes += 1
             id += 1
-            if numOfShapes > 3 {
-                numOfShapes = 1
+            // shading count changes with each card
+            shadingCount += 1
+            
+            // for every 27 cards, change the # of shapes
+            if dealingDeck.count == 27 {
+                numOfShapes = 2
+            } else if dealingDeck.count == 54 {
+                numOfShapes = 3
             }
+            
+            // for every three cards change the color
+            if count % 3 == 0 {
+                colorCount += 1
+                if colorCount == 3 {
+                    colorCount = 0
+                }
+            }
+            
+            // for every 9 cards, change shape
+            if count % 9 == 0 {
+                shapeCount += 1
+                if shapeCount == 3 {
+                    // once we've assigned the third shape, reset the count
+                    shapeCount = 0
+                }
+            }
+            
+            // when we get to the third shading value, reset to 0
+            if shadingCount > 2 {
+                shadingCount = 0
+            }
+            
         }
     }
     
@@ -58,13 +90,27 @@ struct SetGameModel {
     // equatable: Types that conform to the Equatable protocol can be compared for equalit
     struct Card: Identifiable {
         var id: Int
-        var numOfShapes: Int // At the core the number of shapes either have to be the same or different
         var isSelected = false
         var isMatched = false
+        var content: CardFeatures
         
-        init(id: Int, numOfShapes: Int, isSelected: Bool = false, isMatched: Bool = false) {
+        init(id: Int, color: Int, number: Int, shape: Int, shading: Int) {
             self.id = id
-            self.numOfShapes = numOfShapes
+            self.content = CardFeatures(color: color, number: number, shape: shape, shading: shading)
+        }
+    }
+    
+    struct CardFeatures {
+        var color: Int
+        var number: Int
+        var shape: Int
+        var shading: Int
+        
+        init(color: Int, number: Int, shape: Int, shading: Int) {
+            self.color = color
+            self.number = number
+            self.shape = shape
+            self.shading = shading
         }
     }
 }
