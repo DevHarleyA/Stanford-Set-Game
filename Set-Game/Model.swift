@@ -16,6 +16,7 @@ struct SetGameModel {
         createDealingDeck()
     }
     
+    // TODO: [REFACTOR] Break this down into smaller methods. See if logic can be simplified further.
     mutating func createDealingDeck() {
         var count = 0
         var id = 0
@@ -26,8 +27,7 @@ struct SetGameModel {
         var shadingCount = 0
         
         while (count <= 81) {
-            let card = Card(id: id, color: colorCount, number: numOfShapes, shape: shapeCount, shading: shadingCount)
-            dealingDeck.append(card)
+            dealingDeck.append(Card(id: id, color: colorCount, number: numOfShapes, shape: shapeCount, shading: shadingCount))
 
             count += 1
             id += 1
@@ -66,14 +66,20 @@ struct SetGameModel {
         }
     }
     
-    func chooseCard(_ card: Card) {
-        // if the card is not selected or matched, select the card
-        
-        // if the card is already selected, and less than three cards in the pile are currently selected, deselect the card
-        
-        // else if three cards are selected, compare them
+    mutating func chooseCard(_ card: Card) {
+                // if the card is already selected, and less than three cards in the pile are currently selected, deselect the card
+        if let chosenIndex = dealingDeck.firstIndex(where: { $0.id == card.id}),
+           !dealingDeck[chosenIndex].isMatched {
             
-        
+            var card = dealingDeck[chosenIndex]
+            print("\(card.isSelected)")
+            card.isSelected.toggle()
+            if dealingDeck.filter({ $0.isSelected == true }).count == 3 {
+                isSet()
+            }
+            print("Is selected: \(card.isSelected), Total selected: \(dealingDeck.filter({ $0.isSelected == true }).count)")
+        }
+        // else if three cards are selected, compare them
     }
     
     func isSet() {
@@ -89,10 +95,10 @@ struct SetGameModel {
     
     // equatable: Types that conform to the Equatable protocol can be compared for equalit
     struct Card: Identifiable {
-        var id: Int
+        let id: Int // does not change, unique ID for card to be identified when states change
+        let content: CardFeatures
         var isSelected = false
         var isMatched = false
-        var content: CardFeatures
         
         init(id: Int, color: Int, number: Int, shape: Int, shading: Int) {
             self.id = id
@@ -101,10 +107,11 @@ struct SetGameModel {
     }
     
     struct CardFeatures {
-        var color: Int
-        var number: Int
-        var shape: Int
-        var shading: Int
+        // all constants to prevent changing of card features
+        let color: Int
+        let number: Int
+        let shape: Int
+        let shading: Int
         
         init(color: Int, number: Int, shape: Int, shading: Int) {
             self.color = color

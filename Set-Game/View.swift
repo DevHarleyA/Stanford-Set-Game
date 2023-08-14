@@ -10,12 +10,15 @@ import SwiftUI
 struct SetGameView: View {
     @ObservedObject var game: SetViewModel
     
-    
     var body: some View {
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
                 ForEach(game.dealersDeck) { card in
-                    CardView(game: game, card: card).aspectRatio(2/3, contentMode: .fit)
+                    CardView(game: game, card: card)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .onTapGesture {
+                            game.chooseCard(card)
+                        }
                     
                 }
             }
