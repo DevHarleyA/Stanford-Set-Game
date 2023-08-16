@@ -11,6 +11,8 @@ struct SetGameModel {
     // private(set): limit write access to within the scope of the struct but still allow the property to be read outside of the struct
     private(set) var dealingDeck: [Card] = []
     var discardDeck: [Card] = []
+    var chosenCardIds: [Int] = []
+    // create an empty array that holds the ID for each chosen card
     
     init() {
         createDealingDeck()
@@ -18,7 +20,7 @@ struct SetGameModel {
     
     // TODO: [REFACTOR] Break this down into smaller methods. See if logic can be simplified further.
     mutating func createDealingDeck() {
-        var count = 0
+        var count = 1
         var id = 0
         
         var numOfShapes = 1
@@ -64,28 +66,50 @@ struct SetGameModel {
             }
             
         }
+        
+        dealingDeck.shuffle()
     }
     
     mutating func chooseCard(_ card: Card) {
-                // if the card is already selected, and less than three cards in the pile are currently selected, deselect the card
+//        unwrap if we have an index, card is not matched, and we have less than 3 cards chosen
         if let chosenIndex = dealingDeck.firstIndex(where: { $0.id == card.id}),
-           !dealingDeck[chosenIndex].isMatched {
+           !dealingDeck[chosenIndex].isMatched,
+           dealingDeck.filter({ $0.isSelected == true }).count <= 2
+        {
+
+            // if the card is selected, unselect it
+            if dealingDeck[chosenIndex].isSelected,
+               dealingDeck.filter({ $0.isSelected == true }).count <= 2 {
+                dealingDeck[chosenIndex].isSelected = false
+                // remove the card from the chosen id deck
+                chosenCardIds.removeAll(where: { $0 == dealingDeck[chosenIndex].id })
+                print("This card's ID (\(dealingDeck[chosenIndex].id)) has been removed.")
+                return
+            }
             
-            var card = dealingDeck[chosenIndex]
-            print("\(card.isSelected)")
-            card.isSelected.toggle()
+            // toggle the card to true
+            dealingDeck[chosenIndex].isSelected.toggle()
+            chosenCardIds.append(dealingDeck[chosenIndex].id)
+            print("This card's ID (\(dealingDeck[chosenIndex].id)) has been recorded.")
+            
+            // if the deck has three chosen cards, check if set
             if dealingDeck.filter({ $0.isSelected == true }).count == 3 {
                 isSet()
+                return
             }
-            print("Is selected: \(card.isSelected), Total selected: \(dealingDeck.filter({ $0.isSelected == true }).count)")
+            
+            return
         }
-        // else if three cards are selected, compare them
     }
     
+    // use a set - unique values and can count
     func isSet() {
         // if set, move cards to discard Deck
+            // check the three feature numbers of each card
+            // add three more cards at thier indexes
         // if not a set, show error message
-    }
+            //set the three cards isSelected back to false
+     }
     
     func gameOver() {
         // if dealing deck is 0 AND there are no more sets

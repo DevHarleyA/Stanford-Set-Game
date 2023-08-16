@@ -9,21 +9,50 @@ import SwiftUI
 
 struct SetGameView: View {
     @ObservedObject var game: SetViewModel
+    @State var prefix = 12
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                ForEach(game.dealersDeck) { card in
-                    CardView(game: game, card: card)
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .onTapGesture {
-                            game.chooseCard(card)
-                        }
-                    
+        NavigationView {
+            ScrollView {
+                newGameButton
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                    // TODO: Adapt to Aspect VGrid
+                    // TODO: Give only 12 cards initially. Change this number using an @State property
+                    ForEach(game.dealersDeck.prefix(prefix)) { card in
+                        CardView(game: game, card: card)
+                            .aspectRatio(2/3, contentMode: .fit)
+                            .onTapGesture {
+                                game.chooseCard(card)
+                            }
+                        
+                    }
                 }
+                addThreeButton
             }
+            .background(Color(CGColor(red: 254/255, green: 219/255, blue: 183/255, alpha: 1)))
+            .navigationTitle("Set")
+            
         }
+        
+//    TODO: Add game title
     }
+    
+    var addThreeButton: some View {
+        Button("Add\nThree\nCards", action: addThree)
+            .buttonStyle(.borderedProminent)
+    }
+    
+    var newGameButton: some View {
+        Button("New Game", action: {
+            game.newGame()
+        })
+            .buttonStyle(.borderedProminent)
+    }
+    
+    func addThree() {
+        prefix += 3
+    }
+    // TODO: Create new game button
 }
 
 struct CardView: View {
@@ -35,8 +64,10 @@ struct CardView: View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
             shape.fill().foregroundColor(.white)
-            shape.strokeBorder(lineWidth: 2)
-            shape.border(.green)
+            shape.strokeBorder(style: StrokeStyle.init(lineWidth: 3, dash: [5]))
+            if card.isSelected {
+                shape.fill().foregroundColor(.gray)
+            }
             // create the number of shapes for the card
             VStack {
                 
@@ -44,17 +75,17 @@ struct CardView: View {
                     ForEach(0..<card.content.number, id: \.self) { _ in
                         game.shapes[card.content.shape]
                             .foregroundColor(game.colors[card.content.color])
-                            .frame(width: 20, height: 20)
+                            .frame(width: 25, height: 25)
                             .opacity(game.shadings[card.content.shading])
-                            .border(game.colors[card.content.color])
                     }
                 }
-                
-                Text("\(card.content.shading)")
+                .padding(.horizontal)
+    
             }
-            .foregroundColor(.blue)
         }
     }
+    
+    // TODO: function that checks the card.content.number and returns a frame height and size
 }
 
 
@@ -62,6 +93,6 @@ struct SetGameView_Previews: PreviewProvider {
     static var previews: some View {
         let testGame = SetViewModel()
         SetGameView(game: testGame)
-            .preferredColorScheme(.dark)
+//            .preferredColorScheme(.light)
     }
 }

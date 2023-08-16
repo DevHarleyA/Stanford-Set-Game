@@ -13,9 +13,9 @@ class SetViewModel: ObservableObject {
     @Published private var model: SetGameModel
     
     // additional vars
-    var colors: [Color] = [.orange, .red, .green]
+    var colors: [Color] = [.blue, .red, .yellow]
     var shapes: [AnyView] = [AnyView(Rectangle()), AnyView(Capsule()), AnyView(Diamond())]
-    var shadings = [0.0, 0.5, 1]
+    var shadings = [0.25, 0.6, 1]
     
     // model access vars
     var dealersDeck: [SetGameModel.Card] {
@@ -30,20 +30,9 @@ class SetViewModel: ObservableObject {
         model.chooseCard(card)
     }
     
-//    func newGame() {
-//        // create game
-//        let game = SetGameModel()
-//        // create CardContent for each card
-//        createThemes()
-//        // provide each card it's content
-//        _ = game.dealingDeck.map { card in
-//            for theme in contentArray {
-//                var newCard = card
-//                newCard.content = theme
-////                dealersDeck.append(newCard)
-//            }
-//        }
-//    }
+    func newGame() {
+        model = SetGameModel()
+    }
     
 
     
