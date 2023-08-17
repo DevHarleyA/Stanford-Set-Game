@@ -104,9 +104,15 @@ struct SetGameModel {
             // if the deck has three chosen cards, check if set
             if dealingDeck.filter({ $0.isSelected == true }).count == 3 {
                 if isSet() {
+                    // reset chosenCardIds array
+                    chosenCardIds = []
                     isGameOver()
                 } else {
-                    
+                    dealingDeck[chosenIndex].isSelected = false
+                    chosenCardIds = []
+                    // find the other two selected cards and unselect them
+                    dealingDeck[dealingDeck.firstIndex(where: { $0.isSelected == true})!].isSelected = false
+                    dealingDeck[dealingDeck.firstIndex(where: { $0.isSelected == true})!].isSelected = false
                 }
                 return
             }
@@ -117,7 +123,7 @@ struct SetGameModel {
     
     // use a set - unique values and can count
     // TODO: Consider including error type in the return, turn into a tuple
-    func isSet() -> Bool {
+    mutating func isSet() -> Bool {
         // Confirm we have three cards before running this method
         guard dealingDeck.filter({ $0.isSelected == true }).count == 3,
               chosenCardIds.count == 3 else { return false }
@@ -137,19 +143,87 @@ struct SetGameModel {
             return false
         }
         
-        //TODO: put logic to check set here
+        //TODO: need to add three more cards to view if successful set
         
         // Check valid Sets:
-        // same number && same shape allowed (different shading, different color)
+        // same number && same shape allowed (different shading & color)
+        if featTwoCount == 1 && featFourCount == 1 && featOneCount == 3 && featThreeCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
         
-        // same shading && same shape allowed (different color, different number)
+        // same color && same shape (different shading & number)
+        if featOneCount == 1 && featFourCount == 1 && featTwoCount == 3 && featThreeCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
+        
+        // same shading && same shape allowed (different color & number)
+        if featThreeCount == 1 && featFourCount == 1 && featOneCount == 3 && featTwoCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
         
         // same shading (different color, number, shape)
+        if featThreeCount == 1 && featFourCount == 3 && featOneCount == 3 && featTwoCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
         
         // same shape (different color, number, and shading)
+        if featFourCount == 1 && featThreeCount == 3 && featOneCount == 3 && featTwoCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
+        
+        // same number (different color, shape, shading)
+        if featTwoCount == 1 && featFourCount == 3 && featOneCount == 3 && featThreeCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
+        
+        // everything different
+        if featThreeCount == 3 && featFourCount == 3 && featOneCount == 3 && featTwoCount == 3 {
+            // move cards to discardDeck
+            discardDeck.append(card1)
+            discardDeck.append(card2)
+            discardDeck.append(card3)
+            dealingDeck.removeAll(where: { $0.isSelected == true })
+            return true
+        }
     
+        // no set if we reach this point of the function
         return false
      }
+    
+    // TODO: Move positive Set logic here
+    mutating func removeAndAddCards() {
+        
+    }
     
     func isGameOver() -> Bool {
         // if dealing deck is 0 OR dealing deck has less than two cards left

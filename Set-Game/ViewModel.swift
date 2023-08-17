@@ -15,7 +15,7 @@ class SetViewModel: ObservableObject {
     // additional vars
     var colors: [Color] = [.blue, .red, .yellow]
     var shapes: [AnyView] = [AnyView(Rectangle()), AnyView(Capsule()), AnyView(Diamond())]
-    var shadings = [0.25, 0.6, 1]
+    var shadings = [0.1, 0.5, 1]
     
     // model access vars
     var dealersDeck: [SetGameModel.Card] {

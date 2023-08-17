@@ -3,4 +3,70 @@
    uuid = "F00829C7-C5EF-4331-98DA-045C334D8BE1"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BA16AC9D-EA4E-4D70-BEFD-81036AC80484"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Set-Game/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "isSet()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BA16AC9D-EA4E-4D70-BEFD-81036AC80484 - b91a4329b6390831"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Set_Game.SetGameModel.isSet() -&gt; Swift.Bool"
+                  moduleName = "Set-Game"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexandraharley/Developer/Set-Game/Set-Game/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "2120">
+               </Location>
+               <Location
+                  uuid = "BA16AC9D-EA4E-4D70-BEFD-81036AC80484 - b91a4329b6390831"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Set_Game.SetGameModel.isSet() -&gt; Swift.Bool"
+                  moduleName = "Set-Game"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/alexandraharley/Developer/Set-Game/Set-Game/Model.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "1964">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "32AE90A8-9EDC-4DD4-B28C-F2A2F648F17F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Set-Game/Model.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "chooseCard(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
