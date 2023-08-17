@@ -45,12 +45,19 @@ struct SetGameView: View {
     var newGameButton: some View {
         Button("New Game", action: {
             game.newGame()
+            prefix = 12
         })
             .buttonStyle(.borderedProminent)
     }
     
     func addThree() {
-        prefix += 3
+        if game.dealersDeck.count >= 3 {
+            prefix += 3
+        } else if game.dealersDeck.isEmpty {
+            return
+        } else {
+            prefix += game.dealersDeck.count
+        }
     }
     // TODO: Create new game button
 }

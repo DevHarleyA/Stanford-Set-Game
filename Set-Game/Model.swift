@@ -11,11 +11,19 @@ struct SetGameModel {
     // private(set): limit write access to within the scope of the struct but still allow the property to be read outside of the struct
     private(set) var dealingDeck: [Card] = []
     var discardDeck: [Card] = []
-    var chosenCardIds: [Int] = []
     // create an empty array that holds the ID for each chosen card
+    var chosenCardIds: [Int] = []
     
     init() {
         createDealingDeck()
+    }
+    
+    // use error type to determine error message (Maybe translate message in viewModel?
+    enum ErrorType {
+        case sameColor
+        case sameShape
+        case sameNumber
+        case sameShading
     }
     
     // TODO: [REFACTOR] Break this down into smaller methods. See if logic can be simplified further.
@@ -23,6 +31,7 @@ struct SetGameModel {
         var count = 1
         var id = 0
         
+//        Maybe use as enum associated values and add the enum values to the numbers (?)
         var numOfShapes = 1
         var colorCount = 0
         var shapeCount = 0
@@ -83,18 +92,22 @@ struct SetGameModel {
                 dealingDeck[chosenIndex].isSelected = false
                 // remove the card from the chosen id deck
                 chosenCardIds.removeAll(where: { $0 == dealingDeck[chosenIndex].id })
-                print("This card's ID (\(dealingDeck[chosenIndex].id)) has been removed.")
+                //print("This card's ID (\(dealingDeck[chosenIndex].id)) has been removed.")
                 return
             }
             
             // toggle the card to true
             dealingDeck[chosenIndex].isSelected.toggle()
             chosenCardIds.append(dealingDeck[chosenIndex].id)
-            print("This card's ID (\(dealingDeck[chosenIndex].id)) has been recorded.")
+            //print("This card's ID (\(dealingDeck[chosenIndex].id)) has been recorded.")
             
             // if the deck has three chosen cards, check if set
             if dealingDeck.filter({ $0.isSelected == true }).count == 3 {
-                isSet()
+                if isSet() {
+                    isGameOver()
+                } else {
+                    
+                }
                 return
             }
             
@@ -103,17 +116,48 @@ struct SetGameModel {
     }
     
     // use a set - unique values and can count
-    func isSet() {
-        // if set, move cards to discard Deck
-            // check the three feature numbers of each card
-            // add three more cards at thier indexes
-        // if not a set, show error message
-            //set the three cards isSelected back to false
+    // TODO: Consider including error type in the return, turn into a tuple
+    func isSet() -> Bool {
+        // Confirm we have three cards before running this method
+        guard dealingDeck.filter({ $0.isSelected == true }).count == 3,
+              chosenCardIds.count == 3 else { return false }
+        
+        guard let card1 = dealingDeck.first(where: { $0.id == chosenCardIds[0] }),
+                let card2 = dealingDeck.first(where: { $0.id == chosenCardIds[1] }),
+                let card3 = dealingDeck.first(where: { $0.id == chosenCardIds[2] }) else { return false }
+    
+        // add all four features to sets. If we have a single count set and two 3 set count, then it is a match
+        let featOneCount = Set([card1.content.color, card2.content.color, card3.content.color]).count
+        let featTwoCount = Set([card1.content.number, card2.content.number, card3.content.number]).count
+        let featThreeCount = Set([card1.content.shading, card2.content.shading, card3.content.shading]).count
+        let featFourCount = Set([card1.content.shape, card2.content.shape, card3.content.shape]).count
+        
+        // if any sets have 2/3 cards, there are cards that share a feature (not a set)
+        if featOneCount == 2 || featTwoCount == 2 || featThreeCount == 2 || featFourCount == 2 {
+            return false
+        }
+        
+        //TODO: put logic to check set here
+        
+        // Check valid Sets:
+        // same number && same shape allowed (different shading, different color)
+        
+        // same shading && same shape allowed (different color, different number)
+        
+        // same shading (different color, number, shape)
+        
+        // same shape (different color, number, and shading)
+    
+        return false
      }
     
-    func gameOver() {
-        // if dealing deck is 0 AND there are no more sets
-            // end the game
+    func isGameOver() -> Bool {
+        // if dealing deck is 0 OR dealing deck has less than two cards left
+        if dealingDeck.count == 0 || dealingDeck.count < 3 {
+            return true
+        }
+        
+        return false
     }
     
     
